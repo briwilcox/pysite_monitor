@@ -47,32 +47,34 @@ class SiteCheck:
             self.site_request = requests.get(self.url)
         except requests.exceptions.ConnectionError:
             #Connection Failed
-            email_friendly_url = self.url.split('://')
-            return 'Connection failed to site ' + email_friendly_url[1]
+            return 'Connection failed to site ' + self.email_friendly_url()
         except requests.exceptions.HTTPError:
             #Invalid HTTP Response
-            email_friendly_url = self.url.split('://')
-            return 'Invalid HTTP response from URL ' + email_friendly_url[1]
+            return 'Invalid HTTP response from URL ' + self.email_friendly_url()
         except requests.exceptions.Timeout:
             #Connection Timed Out
-            email_friendly_url = self.url.split('://')
-            return 'Connection timed out for URL ' + email_friendly_url[1]
+            return 'Connection timed out for URL ' + self.email_friendly_url()
         except requests.exceptions.TooManyRedirects:
             #Too many redirects
-            email_friendly_url = self.url.split('://')
-            return 'To many redirects when accessing URL ' + email_friendly_url[1]
+            return 'To many redirects when accessing URL ' + self.email_friendly_url()
         except requests.exceptions.RequestException:
             #Misc Requests Error
-            email_friendly_url = self.url.split('://')
-            return 'Unknown requests lib error when accessing ' + email_friendly_url[1]
+            return 'Unknown requests lib error when accessing ' + self.email_friendly_url()
 
     def check_status(self):
         if self.site_request.status_code is 200:
-            email_friendly_url = self.url.split('://')
-            return 'Success! Your site ' + email_friendly_url[1] + ' is up.'
+            return 'Success! Your site ' + self.email_friendly_url() + ' is up.'
         else:
-            email_friendly_url = self.url.split('://')
-            return 'Failure - Your site ' + email_friendly_url[1] + ' returned HTTP error code ' + self.site_request.status_code.__str__()
+            return 'Failure - Your site ' + self.email_friendly_url() + ' returned HTTP error code ' \
+                   + self.site_request.status_code.__str__()
+
+    def email_friendly_url(self):
+        # For whatever reason certain characters do not get past the email gateways, this appears to solves that
+        if '://' in self.url:  # Likely redundant, urllib3 (in requests) should throw if this is invalid
+            split_url_string = self.url.split('://')
+            return split_url_string[1]
+        else:
+            raise Exception('Invalid URL string entered')
 
 
 class AlertsEmailAndSMS:
