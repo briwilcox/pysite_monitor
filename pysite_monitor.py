@@ -41,31 +41,32 @@ class SiteCheck:
         self.url = url
         self.errors = ''
         self.site_request = None
+        self.sms_ready_url = self.email_friendly_url()
 
     def make_request(self):
         try:
             self.site_request = requests.get(self.url)
         except requests.exceptions.ConnectionError:
             #Connection Failed
-            return 'Connection failed to site ' + self.email_friendly_url()
+            return 'Connection failed to site ' + self.sms_ready_url
         except requests.exceptions.HTTPError:
             #Invalid HTTP Response
-            return 'Invalid HTTP response from URL ' + self.email_friendly_url()
+            return 'Invalid HTTP response from URL ' + self.sms_ready_url
         except requests.exceptions.Timeout:
             #Connection Timed Out
-            return 'Connection timed out for URL ' + self.email_friendly_url()
+            return 'Connection timed out for URL ' + self.sms_ready_url
         except requests.exceptions.TooManyRedirects:
             #Too many redirects
-            return 'To many redirects when accessing URL ' + self.email_friendly_url()
+            return 'To many redirects when accessing URL ' + self.sms_ready_url
         except requests.exceptions.RequestException:
             #Misc Requests Error
-            return 'Unknown requests lib error when accessing ' + self.email_friendly_url()
+            return 'Unknown requests lib error when accessing ' + self.sms_ready_url
 
     def check_status(self):
         if self.site_request.status_code is 200:
-            return 'Success! Your site ' + self.email_friendly_url() + ' is up.'
+            return 'Success! Your site ' + self.sms_ready_url + ' is up.'
         else:
-            return 'Failure - Your site ' + self.email_friendly_url() + ' returned HTTP error code ' \
+            return 'Failure - Your site ' + self.sms_ready_url + ' returned HTTP error code ' \
                    + self.site_request.status_code.__str__()
 
     def email_friendly_url(self):
