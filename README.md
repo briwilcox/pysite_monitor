@@ -35,3 +35,7 @@ Pysite Monitor is licensed under GNU GENERAL PUBLIC LICENSE (version 3), and by 
 # How do I run this every day / hour / minute?
 
 I recommend Crontab.
+
+# Misc
+
+To contact the author visit http://brianmwilcox.com
