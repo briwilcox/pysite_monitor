@@ -3,6 +3,8 @@ pysite_monitor
 
 PySite Monitor is a python up time monitor and alert tool. Receive email and sms / text alerts when your website is down. 
 
+Note: You are responsible for any and all data and texting charges you incur by using this application. 
+
 # Usage
 
 usage: pysite_monitor.py website_url email_from email_password
